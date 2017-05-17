@@ -49,14 +49,17 @@ def tangents_field(y0, t0, h, f, meth, N):
     tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
     X = [0.]*N
     Y = [0.]*N
+    DY = [0.]*N
     X[0] = t0
-    Y[0] = f(y0, t0)
+    Y[0] = y0
+    DY[0] = f(y0, t0)
     for i in range(1,N):
         y0 = meth(y0, t0, h, f)
         t0 += h
         X[i] = t0
-        Y[i] = f(y0, t0)
-    plt.quiver(X, Y)
+        Y[i] = y0
+        DY[i] = f(y0, t0)
+    plt.quiver(X, DY)
     plt.show()
     return
 
