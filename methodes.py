@@ -1,6 +1,7 @@
 #===============IMPORTS===============#
 
 import numpy.linalg as nl
+import matplotlib.pyplot as plt
 
 #=================CORE================#
 
@@ -44,9 +45,22 @@ def meth__epsilon(y0, t0, tf, esp, f, meth):
 
 #==============TANGENTS===============#
 
-def tangents_field(y, t, h, f):
-    tan_t = lambda x : f(y, t).dot((x - t)) + y
+def tangents_field(y0, t0, h, f, meth, N):
+    tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
+    X = [0.]*N
+    Y = [0.]*N
+    X[0] = t0
+    Y[0] = f(y0, t0)
+    for i in range(1,N):
+        y0 = meth(y0, t0, h, f)
+        t0 += h
+        X[i] = t0
+        Y[i] = f(y0, t0)
+    plt.quiver(X, Y)
+    plt.show()
+    return
 
+tangents_field(1, 0, 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
 
 #==============TEST_ZONE==============#
 
