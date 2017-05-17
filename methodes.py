@@ -45,10 +45,14 @@ def meth__epsilon(y0, t0, tf, esp, f, meth):
 #==============TANGENTS===============#
 
 def tangents_field(y, t, h, f):
-    tan_t = lambda x : f(y, t)*(x - t) + y
-    
+    tan_t = lambda x : f(y, t).dot((x - t)) + y
+
 
 #==============TEST_ZONE==============#
 
 def test_methodes():
+    # Dimension 1
+    t0 = 0
+    y0 = 1
+    f = lambda y,t : y/(1 + t**2)
     return
