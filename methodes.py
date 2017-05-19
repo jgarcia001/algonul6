@@ -2,6 +2,7 @@
 
 import numpy.linalg as nl
 import matplotlib.pyplot as plt
+import numpy as np
 
 #=================CORE================#
 
@@ -30,18 +31,24 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
+    Y = [start_y]
     for i in range(N):
         start_y = meth(start_y, start_x, h, f)
         start_x += h
-    return start_y
+        Y.append(start_y)
+    return Y
+
+print(meth_n_step(0., 1., 100, 0.01, lambda y,t : y/(1 + t**2), step_euler))
 
 def meth__epsilon(y0, t0, tf, esp, f, meth):
     start_y = y0
     start_x = t0
+    Y = [start_y]
     while (nl.norm(meth(start_y, start_x, h, f) - f(start_y, start_x)) > eps):
         start_y = meth(start_y, start_x, h, f)
         start_x += h
-    return start_y
+        Y.append(start_y)
+    return Y
 
 #==============TANGENTS===============#
 
@@ -63,7 +70,7 @@ def tangents_field(y0, t0, h, f, meth, N):
     plt.show()
     return
 
-tangents_field(1, 0, 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
+#tangents_field(1, 0, 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
 
 #==============TEST_ZONE==============#
 
