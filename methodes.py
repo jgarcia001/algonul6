@@ -116,3 +116,6 @@ def test_methodes():
     f = lambda y,t : np.array([-y[1], y[0]])
 
     return
+
+if __name__ == '__main__':
+    test_methodes()
