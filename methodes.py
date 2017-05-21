@@ -31,11 +31,12 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
-    Y = np.array([start_y])
+    Y = np.empty([N, y0.size])
+    Y[0] = start_y
     for i in range(1,N):
         start_y = meth(start_y, start_x, h, f)
         start_x += h
-        Y = np.append(Y, start_y)
+        Y[i] = start_y
     return Y
 
 def meth__epsilon(y0, t0, tf, eps, f, meth):
