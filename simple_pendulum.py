@@ -53,26 +53,25 @@ def find_period(y_array):
 
 
 y_zero = np.empty(2)
-number_angle = 90
+y_array = np.empty(N)
+number_angle = 89
 frequency = np.empty(number_angle)
 for j in range (0, number_angle, 1):
-    y_zero[0] = np.radians(j)
+    y_zero[0] = np.radians(j + 1)
     y_zero[1] = 0
 
-
-    y_array = np.empty(N)
     y_array[0] = y_zero[0]
     y = pendulum_position_function(y_zero)
-
     for i in range (1, N):
         y_array[i] = np.degrees(y[i][0])
 
     period = find_period(y_array)
+    print(period)
     frequency[j] = 1/period
-    print(frequency[j])
-
+print(frequency)
 times = np.arange(0, number_angle, 1)
 plt.plot(times, frequency)
-frequency_little_angle = np.sqrt(g/length)/(np.pi*2)
+frequency_little_angle = (np.sqrt(g/length)/(np.pi*2))*h
+print(1/frequency_little_angle)
 plt.plot(times, np.full((number_angle),frequency_little_angle))
 plt.show()

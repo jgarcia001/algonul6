@@ -3,6 +3,7 @@
 import numpy.linalg as nl
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.misc as sm
 
 #=================CORE================#
 
@@ -31,7 +32,10 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
-    Y = np.empty([N, y0.size])
+    if (type(y0) is float):
+        Y = np.empty(N)
+    else:
+        Y = np.empty([N, y0.size])
     Y[0] = start_y
     for i in range(1,N):
         start_y = meth(start_y, start_x, h, f)
@@ -39,7 +43,7 @@ def meth_n_step(y0, t0, N, h, f, meth):
         Y[i] = start_y
     return Y
 
-def meth__epsilon(y0, t0, tf, eps, f, meth):
+def meth_epsilon(y0, t0, tf, eps, f, meth):
     start_y = y0
     start_x = t0
     h = (tf - t0) * eps
@@ -53,7 +57,8 @@ def meth__epsilon(y0, t0, tf, eps, f, meth):
 #==============TANGENTS===============#
 
 def tangents_field(y0, t0, h, f, meth, N):
-    tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
+    #tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
+    t0_ = t0
     X = [0.]*N
     Y = [0.]*N
     DY = [0.]*N
@@ -66,11 +71,13 @@ def tangents_field(y0, t0, h, f, meth, N):
         X[i] = t0
         Y[i] = y0
         DY[i] = f(y0, t0)
-    plt.quiver(X, DY)
+    print(t0_,t0)
+    U, V = np.meshgrid(np.arange(0.,0.5,0.1), np.arange(0.,0.5,0.1))
+    plt.quiver(U, V, Y, DY)
     plt.show()
     return
 
-#tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
+tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
 
 #==============TEST_ZONE==============#
 
@@ -95,19 +102,44 @@ def test_methodes():
     Y_heun = meth_n_step(y0, t0, N, h, f, step_heun)
     Y_runge_kutta_4 = meth_n_step(y0, t0, N, h, f, step_runge_kutta_4)
 
+    y_sol = lambda t : np.exp(np.arctan(t))
+
     plt.plot(X, Y_euler, label='Euler')
     plt.plot(X, Y_middle_point, label='Middle point')
     plt.plot(X, Y_heun, label='Heun')
     plt.plot(X, Y_runge_kutta_4, label='Runge-Kutta 4')
+    plt.plot(X, y_sol(X), label='solution')
+    plt.title('n_step : solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
+    plt.legend()
+    plt.show()
+
+    plt.plot(X, Y_euler - y_sol(X), label='Euler')
+    plt.plot(X, Y_middle_point - y_sol(X), label='Middle point')
+    plt.plot(X, Y_heun - y_sol(X), label='Heun')
+    plt.plot(X, Y_runge_kutta_4 - y_sol(X), label='Runge-Kutta 4')
+    plt.title('distance to solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
     plt.legend()
     plt.show()
 
     tf = 3.
 
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_euler))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_middle_point))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_heun))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+    X = np.arange(t0, tf, h)
+    Y_euler = meth_epsilon(y0, t0, tf, 1/N, f, step_euler)
+    Y_middle_point = meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point)
+    Y_heun = meth_epsilon(y0, t0, tf, 1/N, f, step_heun)
+    Y_runge_kutta_4 = meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4)
+
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_euler))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_heun))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+
+    X = np.arange(-2.,8.,0.4)
+
+    U, V = np.meshgrid(X, X)
+    dy_sol = lambda t : sm.derivative(y_sol, t)
+    plt.quiver(U, V, y_sol(X), dy_sol(X))
+    plt.show()
 
     # Dimension 2
     t0 = 0.
