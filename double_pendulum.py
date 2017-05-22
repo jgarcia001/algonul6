@@ -28,7 +28,10 @@ def pos2(l1, theta1, l2, theta2):
 
 def f_function1():
 
-    return (lambda u,t: np.array([u[1], (- 3*g*w* np.sin(u[0]) - w*g*np.sin(u[0] - 2*u[2]) - 2*np.sin(u[0] - u[2])*w*(u[3]**2*l2 + u[1]**2*l1 * np.cos(u[0] - u[2]))) / (l1*w(3 - np.cos(2*u[0] - 2*u[2]))), u[3], (2*np.sin(u[0] - u[2])*(u[1]**2*l1*2*w + g*2*w*np.cos(u[0]) + u[3]**2*w*np.cos(u[0] - u[2]))) / (l2*w(3 - np.cos(2*u[0] - 2*u[2])))]))
+    return (lambda u,t: np.array([u[1],
+                                  (- 3*g*w* np.sin(u[0]) - w*g*np.sin(u[0] - 2*u[2]) - 2*np.sin(u[0] - u[2])*w*(u[3]**2*l2 + u[1]**2*l1 * np.cos(u[0] - u[2]))) / (l1*(3*w - np.cos(2*u[0] - 2*u[2]))),
+                                  u[3],
+                                  (2*np.sin(u[0] - u[2])*(u[1]**2*l1*2*w + g*2*w*np.cos(u[0]) + u[3]**2*w*np.cos(u[0] - u[2]))) / (l2*(3*w - np.cos(2*u[0] - 2*u[2])))]))
 
 
 def f_function2():
