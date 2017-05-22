@@ -31,7 +31,10 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
-    Y = np.empty([N, y0.size])
+    if (type(y0) is float):
+        Y = np.empty(N)
+    else:
+        Y = np.empty([N, y0.size])
     Y[0] = start_y
     for i in range(1,N):
         start_y = meth(start_y, start_x, h, f)
@@ -39,7 +42,7 @@ def meth_n_step(y0, t0, N, h, f, meth):
         Y[i] = start_y
     return Y
 
-def meth__epsilon(y0, t0, tf, eps, f, meth):
+def meth_epsilon(y0, t0, tf, eps, f, meth):
     start_y = y0
     start_x = t0
     h = (tf - t0) * eps
@@ -95,19 +98,37 @@ def test_methodes():
     Y_heun = meth_n_step(y0, t0, N, h, f, step_heun)
     Y_runge_kutta_4 = meth_n_step(y0, t0, N, h, f, step_runge_kutta_4)
 
+    y_sol = lambda t : np.exp(np.arctan(t))
+
     plt.plot(X, Y_euler, label='Euler')
     plt.plot(X, Y_middle_point, label='Middle point')
     plt.plot(X, Y_heun, label='Heun')
     plt.plot(X, Y_runge_kutta_4, label='Runge-Kutta 4')
+    plt.plot(X, y_sol(X), label='solution')
+    plt.title('n_step : solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
+    plt.legend()
+    plt.show()
+
+    plt.plot(X, Y_euler - y_sol(X), label='Euler')
+    plt.plot(X, Y_middle_point - y_sol(X), label='Middle point')
+    plt.plot(X, Y_heun - y_sol(X), label='Heun')
+    plt.plot(X, Y_runge_kutta_4 - y_sol(X), label='Runge-Kutta 4')
+    plt.title('distance to solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
     plt.legend()
     plt.show()
 
     tf = 3.
 
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_euler))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_middle_point))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_heun))
-    #print(meth__epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+    X = np.arange(t0, tf, h)
+    Y_euler = meth_epsilon(y0, t0, tf, 1/N, f, step_euler)
+    Y_middle_point = meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point)
+    Y_heun = meth_epsilon(y0, t0, tf, 1/N, f, step_heun)
+    Y_runge_kutta_4 = meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4)
+
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_euler))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_heun))
+    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
 
     # Dimension 2
     t0 = 0.
