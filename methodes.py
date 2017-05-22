@@ -3,6 +3,7 @@
 import numpy.linalg as nl
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.misc as sm
 
 #=================CORE================#
 
@@ -56,7 +57,8 @@ def meth_epsilon(y0, t0, tf, eps, f, meth):
 #==============TANGENTS===============#
 
 def tangents_field(y0, t0, h, f, meth, N):
-    tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
+    #tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
+    t0_ = t0
     X = [0.]*N
     Y = [0.]*N
     DY = [0.]*N
@@ -69,11 +71,13 @@ def tangents_field(y0, t0, h, f, meth, N):
         X[i] = t0
         Y[i] = y0
         DY[i] = f(y0, t0)
-    plt.quiver(X, DY)
+    print(t0_,t0)
+    U, V = np.meshgrid(np.arange(0.,0.5,0.1), np.arange(0.,0.5,0.1))
+    plt.quiver(U, V, Y, DY)
     plt.show()
     return
 
-#tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
+tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
 
 #==============TEST_ZONE==============#
 
@@ -129,6 +133,13 @@ def test_methodes():
     #print(meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point))
     #print(meth_epsilon(y0, t0, tf, 1/N, f, step_heun))
     #print(meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+
+    X = np.arange(-2.,8.,0.4)
+
+    U, V = np.meshgrid(X, X)
+    dy_sol = lambda t : sm.derivative(y_sol, t)
+    plt.quiver(U, V, y_sol(X), dy_sol(X))
+    plt.show()
 
     # Dimension 2
     t0 = 0.
