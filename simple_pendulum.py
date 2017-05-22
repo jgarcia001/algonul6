@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import methodes as m
 
 N = 100
-h = 0.1
+h = 0.1 
 
 g = 9.81
 length = 0.5
