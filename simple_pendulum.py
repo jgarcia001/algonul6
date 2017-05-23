@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 import methodes as m
 
-N = 100
+N = 300
 h = 0.1 
 
 g = 9.81
@@ -19,37 +19,33 @@ def pendulum_position_function(y_zero):
     f = f_function()
     return m.meth_n_step(y_zero, 0, N, h, f, m.step_runge_kutta_4)
 
-def find_period(y_array):
-    index_start_zero = 0
+def find_period(y_array, theta):
+    index_start_zero = -1
     index_end_zero = 0
-    count_zero = -1
-    num_period = 0
+    half_period = 0
 
     n = y_array.size
     i = 1
-    while (count_zero == -1) and i < n:
+    while (index_start_zero == -1) and i < n:
         if((y_array[i] * y_array[i - 1]) < 0):
             index_start_zero = i
-            count_zero = 0
         i = i + 1
         
-    if (not (count_zero == 0)):
+    if (index_start_zero == -1):
         return -1
     
     while i < n:
         if((y_array[i] * y_array[i - 1]) < 0):
-            count_zero = count_zero + 1
-            if(count_zero == 2):
-                count_zero = 0
-                num_period = num_period + 1
-                index_end_zero = i
+            half_period = half_period + 1
+            index_end_zero = i
         i = i + 1
 
-    if (num_period == 0):
+    if (half_period == 0):
         return -1
-    
-    return (index_end_zero - index_start_zero) / num_period 
 
+    period_time = ((index_end_zero - index_start_zero)*h) / (half_period/2)
+
+    return period_time
 
 
 y_zero = np.empty(2)
@@ -65,13 +61,12 @@ for j in range (0, number_angle, 1):
     for i in range (1, N):
         y_array[i] = np.degrees(y[i][0])
 
-    period = find_period(y_array)
-    print(period)
+    period = find_period(y_array, j + 1)
     frequency[j] = 1/period
-print(frequency)
+
 times = np.arange(0, number_angle, 1)
 plt.plot(times, frequency)
-frequency_little_angle = (np.sqrt(g/length)/(np.pi*2))*h
+frequency_little_angle = (np.sqrt(g/length)/(np.pi*2))
 print(1/frequency_little_angle)
 plt.plot(times, np.full((number_angle),frequency_little_angle))
 plt.show()
