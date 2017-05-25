@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 import methodes as m
 
 N = 10
-h = 0.01
+h = 0.5
 
-a = 50
-b = 2
-c = 20
-d = 4
+a = 1
+b = 1
+c = 1
+d = 1
 
 def derivative_function():
     return (lambda x,t: np.array(x[0] * (a - b * x[1]), x[1] * (c * x[0] - d))) 
@@ -17,8 +17,8 @@ def derivative_function():
 def prey_predator_function(prey_predator_zero, time_zero, derivative):
     return m.meth_n_step(prey_predator_zero, time_zero, N, h, derivative(), m.step_runge_kutta_4)
 
-prey_zero = 10
-predator_zero = 20
+prey_zero = 4
+predator_zero = 4
 prey_predator_zero = np.array([prey_zero, predator_zero])
 
 time_zero = 0

@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 
 import methodes as m
 
-N = 3000
-h = 30
+N = 10
+h = 0.1
 
 
-birth = 200
-death = 150
+birth = 12
+death = 8
 limit_people = 500
 
 def derivative_function_without_limit():
