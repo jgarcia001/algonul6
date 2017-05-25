@@ -85,36 +85,6 @@ def test_modelling():
 
 test_modelling()
     
-def test_flip1():
-    the1, the2, first_flip = double_pendulum(t1, t2)
-
-    size = np.size(the1)
-    
-    ufx = np.zeros(size)
-    ufy = np.zeros(size)
-    
-    fx = np.zeros(size)
-    fy = np.zeros(size)
-    po=0
-    pox=0
-    
-    for p in range (size):
-        
-        if ((3*np.cos(the1[p]) + np.cos(the2[p])) >= 2):
-            ufx[pox] = the1[p]
-            ufy[pox] = the2[p]
-            pox+=1
-        else :
-            fx[po] = the1[p]
-            fy[po] = the2[p]
-            po+=1
-            
-    plt.plot(fx, fy, "g+")
-    plt.plot(ufx, ufy, "b+")
-    plt.show()
-
-test_flip1()
-    
 def test_modelling_position():
     the1, the2, firstflip = double_pendulum(t1, t2)
 
@@ -133,7 +103,7 @@ def test_modelling_position():
 
 test_modelling_position()
 
-def test_flip2():
+def test_flip():
     N = 200
     h = 0.05
 
@@ -170,4 +140,4 @@ def test_flip2():
     plt.imshow(image, vmin = 0, vmax = 1)
     plt.show()
 
-test_flip2()
+test_flip()

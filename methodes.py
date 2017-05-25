@@ -31,8 +31,8 @@ def step_runge_kutta_4(y, t, h, f):
 # Generalisation
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
-    start_x = t0 
-    if (type(y0) is float):
+    start_x = t0
+    if (type(y0) is float or type(y0) is int or type(y0) is complex):
         Y = np.empty(N)
     else:
         Y = np.empty([N, y0.size])
@@ -57,11 +57,10 @@ def meth_epsilon(y0, t0, tf, eps, f, meth):
 #==============TANGENTS===============#
 
 def tangents_field(y0, t0, h, f, meth, N):
-    #tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
     t0_ = t0
-    X = [0.]*N
-    Y = [0.]*N
-    DY = [0.]*N
+    X = np.empty(N)
+    Y = np.empty(N)
+    DY = np.empty(N)
     X[0] = t0
     Y[0] = y0
     DY[0] = f(y0, t0)
@@ -71,13 +70,7 @@ def tangents_field(y0, t0, h, f, meth, N):
         X[i] = t0
         Y[i] = y0
         DY[i] = f(y0, t0)
-    print(t0_,t0)
-    U, V = np.meshgrid(np.arange(0.,0.5,0.1), np.arange(0.,0.5,0.1))
-    plt.quiver(U, V, Y, DY)
-    plt.show()
-    return
-
-tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
+    return X, Y, DY
 
 #==============TEST_ZONE==============#
 
@@ -102,6 +95,8 @@ def test_methodes():
     Y_heun = meth_n_step(y0, t0, N, h, f, step_heun)
     Y_runge_kutta_4 = meth_n_step(y0, t0, N, h, f, step_runge_kutta_4)
 
+        # Different Methods Comparison
+
     y_sol = lambda t : np.exp(np.arctan(t))
 
     plt.plot(X, Y_euler, label='Euler')
@@ -121,24 +116,55 @@ def test_methodes():
     plt.legend()
     plt.show()
 
-    tf = 3.
+    # Dimension 2
 
-    X = np.arange(t0, tf, h)
-    Y_euler = meth_epsilon(y0, t0, tf, 1/N, f, step_euler)
-    Y_middle_point = meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point)
-    Y_heun = meth_epsilon(y0, t0, tf, 1/N, f, step_heun)
-    Y_runge_kutta_4 = meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4)
+    g = lambda Y,t : np.array([-Y[1],  Y[0]])
+    Y0 = np.array([1, 0])
+    g_sol_1 = lambda t : np.cos(t-np.pi/2)
+    g_sol_2 = lambda t : -np.sin(t-np.pi/2)
 
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_euler))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_heun))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+    # Plot Section
 
-    X = np.arange(-2.,8.,0.4)
+    X = np.arange(t0, t0 + (N)*h, h)
+    Y_euler = meth_n_step(Y0, t0, N, h, g, step_euler)
+    Y_middle_point = meth_n_step(Y0, t0, N, h, g, step_middle_point)
+    Y_heun = meth_n_step(Y0, t0, N, h, g, step_heun)
+    Y_runge_kutta_4 = meth_n_step(Y0, t0, N, h, g, step_runge_kutta_4)
 
+        # Different Methods Comparison
+
+    #y_sol = lambda t : np.exp(np.arctan(t))
+
+    plt.plot(X, Y_euler, label='Euler')
+    plt.plot(X, Y_middle_point, label='Middle point')
+    plt.plot(X, Y_heun, label='Heun')
+    plt.plot(X, Y_runge_kutta_4, label='Runge-Kutta 4')
+    plt.plot(X, g_sol_1(X), label='solution y1')
+    plt.plot(X, g_sol_2(X), label='solution y2')
+    plt.title('n_step : solution to y\'(t) = [-y2(t), y1(t)] with y(0) = [1, 0]')
+    plt.legend()
+    plt.show()
+    
+    # Tangents Field
+
+    # Dimension 1
+
+        # Theoretical
+    X = np.arange(0.,4.,0.2)
     U, V = np.meshgrid(X, X)
     dy_sol = lambda t : sm.derivative(y_sol, t)
     plt.quiver(U, V, y_sol(X), dy_sol(X))
+    plt.title("Theoretical Tangents Field")
+    plt.show()
+
+        # Experimental
+    N = 20
+    h = 0.2
+
+    X, Y, DY = tangents_field(y0, t0, h, f, step_euler, N)
+    U, V = np.meshgrid(X, X)
+    plt.quiver(U, V, Y, DY)
+    plt.title("Experimental Tangents Field")
     plt.show()
 
     # Dimension 2
