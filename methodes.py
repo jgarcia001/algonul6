@@ -32,7 +32,7 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
-    if (type(y0) is float or type(y0) is int or type(y0) is long or type(y0) is complex):
+    if (type(y0) is float or type(y0) is int or type(y0) is complex):
         Y = np.empty(N)
     else:
         Y = np.empty([N, y0.size])
@@ -118,8 +118,10 @@ def test_methodes():
 
     # Dimension 2
 
-    g = lambda Y : np.array([[-Y[1]],  [Y[0]])
-    Y0 = np.array([[1], [0]])
+    g = lambda Y,t : np.array([-Y[1],  Y[0]])
+    Y0 = np.array([1, 0])
+    g_sol_1 = lambda t : np.cos(t-np.pi/2)
+    g_sol_2 = lambda t : -np.sin(t-np.pi/2)
 
     # Plot Section
 
@@ -137,12 +139,13 @@ def test_methodes():
     plt.plot(X, Y_middle_point, label='Middle point')
     plt.plot(X, Y_heun, label='Heun')
     plt.plot(X, Y_runge_kutta_4, label='Runge-Kutta 4')
-    #plt.plot(X, y_sol(X), label='solution')
-    plt.title('n_step : solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
+    plt.plot(X, g_sol_1(X), label='solution y1')
+    plt.plot(X, g_sol_2(X), label='solution y2')
+    plt.title('n_step : solution to y\'(t) = [-y2(t), y1(t)] with y(0) = [1, 0]')
     plt.legend()
     plt.show()
 
-    plt.plot(X, Y_euler - y_sol(X), label='Euler')
+    plt.plot(X, Y_euler - g_sol_1(X), label='Euler')
     plt.plot(X, Y_middle_point - y_sol(X), label='Middle point')
     plt.plot(X, Y_heun - y_sol(X), label='Heun')
     plt.plot(X, Y_runge_kutta_4 - y_sol(X), label='Runge-Kutta 4')
