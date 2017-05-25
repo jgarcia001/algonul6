@@ -57,11 +57,10 @@ def meth_epsilon(y0, t0, tf, eps, f, meth):
 #==============TANGENTS===============#
 
 def tangents_field(y0, t0, h, f, meth, N):
-    #tan0 = lambda x : f(y0, t0).dot((x - t0)) + y0
     t0_ = t0
-    X = [0.]*N
-    Y = [0.]*N
-    DY = [0.]*N
+    X = np.empty(N)
+    Y = np.empty(N)
+    DY = np.empty(N)
     X[0] = t0
     Y[0] = y0
     DY[0] = f(y0, t0)
@@ -71,7 +70,7 @@ def tangents_field(y0, t0, h, f, meth, N):
         X[i] = t0
         Y[i] = y0
         DY[i] = f(y0, t0)
-    return Y, DY
+    return X, Y, DY
 
 #==============TEST_ZONE==============#
 
@@ -130,9 +129,7 @@ def test_methodes():
     # Dimension 1
 
         # Theoretical
-    X = np.arange(-2.,8.,0.4)
-    N = len(X)
-
+    X = np.arange(0.,4.,0.2)
     U, V = np.meshgrid(X, X)
     dy_sol = lambda t : sm.derivative(y_sol, t)
     plt.quiver(U, V, y_sol(X), dy_sol(X))
@@ -140,7 +137,11 @@ def test_methodes():
     plt.show()
 
         # Experimental
-    Y, DY = tangents_field(y0, t0, h, f, step_euler, N)
+    N = 20
+    h = 0.2
+
+    X, Y, DY = tangents_field(y0, t0, h, f, step_euler, N)
+    U, V = np.meshgrid(X, X)
     plt.quiver(U, V, Y, DY)
     plt.title("Experimental Tangents Field")
     plt.show()
