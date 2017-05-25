@@ -31,7 +31,7 @@ def step_runge_kutta_4(y, t, h, f):
 # Generalisation
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
-    start_x = t0
+    start_x = t0 
     if (type(y0) is float):
         Y = np.empty(N)
     else:

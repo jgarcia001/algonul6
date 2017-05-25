@@ -19,31 +19,39 @@ def pendulum_position_function(y_zero):
     f = f_function()
     return m.meth_n_step(y_zero, 0, N, h, f, m.step_runge_kutta_4)
 
+
+def find_zero_x(y0, y1, i):
+    return (-y0/(y1 - y0 )) + i
+    
 def find_period(y_array, theta):
-    index_start_zero = -1
-    index_end_zero = 0
+    start_periods = -1
+    end_periods = -1
     half_period = 0
 
     n = y_array.size
     i = 1
-    while (index_start_zero == -1) and i < n:
+    while (start_periods == -1) and i < n:
         if((y_array[i] * y_array[i - 1]) < 0):
-            index_start_zero = i
+            start_periods = find_zero_x(y_array[i - 1], y_array[i] ,i)
         i = i + 1
         
-    if (index_start_zero == -1):
+    if (start_periods == -1):
         return -1
     
     while i < n:
         if((y_array[i] * y_array[i - 1]) < 0):
             half_period = half_period + 1
-            index_end_zero = i
+            end_periods = find_zero_x(y_array[i - 1], y_array[i], i)
+            print(i - 1)
+            print(end_periods)
+            print(i)
+            print("       ")
         i = i + 1
 
     if (half_period == 0):
         return -1
 
-    period_time = ((index_end_zero - index_start_zero)*h) / (half_period/2)
+    period_time = ((end_periods - start_periods)*h) / (half_period/2)
 
     return period_time
 

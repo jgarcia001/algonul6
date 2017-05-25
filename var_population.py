@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 
 import methodes as m
 
-N = 10
-h = 0.01
+N = 3000
+h = 30
 
 
 birth = 200
