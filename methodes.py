@@ -32,7 +32,7 @@ def step_runge_kutta_4(y, t, h, f):
 def meth_n_step(y0, t0, N, h, f, meth):
     start_y = y0
     start_x = t0
-    if (type(y0) is float):
+    if (type(y0) is float or type(y0) is int or type(y0) is long or type(y0) is complex):
         Y = np.empty(N)
     else:
         Y = np.empty([N, y0.size])
@@ -71,13 +71,7 @@ def tangents_field(y0, t0, h, f, meth, N):
         X[i] = t0
         Y[i] = y0
         DY[i] = f(y0, t0)
-    print(t0_,t0)
-    U, V = np.meshgrid(np.arange(0.,0.5,0.1), np.arange(0.,0.5,0.1))
-    plt.quiver(U, V, Y, DY)
-    plt.show()
-    return
-
-tangents_field(1., 0., 0.01, lambda y,t : y/(1 + t**2), step_euler, 50)
+    return Y, DY
 
 #==============TEST_ZONE==============#
 
@@ -101,6 +95,8 @@ def test_methodes():
     Y_middle_point = meth_n_step(y0, t0, N, h, f, step_middle_point)
     Y_heun = meth_n_step(y0, t0, N, h, f, step_heun)
     Y_runge_kutta_4 = meth_n_step(y0, t0, N, h, f, step_runge_kutta_4)
+
+        # Different Methods Comparison
 
     y_sol = lambda t : np.exp(np.arctan(t))
 
@@ -129,16 +125,24 @@ def test_methodes():
     Y_heun = meth_epsilon(y0, t0, tf, 1/N, f, step_heun)
     Y_runge_kutta_4 = meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4)
 
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_euler))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_middle_point))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_heun))
-    #print(meth_epsilon(y0, t0, tf, 1/N, f, step_runge_kutta_4))
+    # Tangents Field
 
+    # Dimension 1
+
+        # Theoretical
     X = np.arange(-2.,8.,0.4)
+    N = len(X)
 
     U, V = np.meshgrid(X, X)
     dy_sol = lambda t : sm.derivative(y_sol, t)
     plt.quiver(U, V, y_sol(X), dy_sol(X))
+    plt.title("Theoretical Tangents Field")
+    plt.show()
+
+        # Experimental
+    Y, DY = tangents_field(y0, t0, h, f, step_euler, N)
+    plt.quiver(U, V, Y, DY)
+    plt.title("Experimental Tangents Field")
     plt.show()
 
     # Dimension 2
