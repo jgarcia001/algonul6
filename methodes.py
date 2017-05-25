@@ -144,7 +144,7 @@ def test_methodes():
     plt.title('n_step : solution to y\'(t) = [-y2(t), y1(t)] with y(0) = [1, 0]')
     plt.legend()
     plt.show()
-    
+
     # Tangents Field
 
     # Dimension 1
