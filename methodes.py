@@ -144,15 +144,7 @@ def test_methodes():
     plt.title('n_step : solution to y\'(t) = [-y2(t), y1(t)] with y(0) = [1, 0]')
     plt.legend()
     plt.show()
-
-    plt.plot(X, Y_euler - g_sol_1(X), label='Euler')
-    plt.plot(X, Y_middle_point - y_sol(X), label='Middle point')
-    plt.plot(X, Y_heun - y_sol(X), label='Heun')
-    plt.plot(X, Y_runge_kutta_4 - y_sol(X), label='Runge-Kutta 4')
-    plt.title('distance to solution to y\'(t) = y(t)/(1 + t^2) with y(0) = 1')
-    plt.legend()
-    plt.show()
-
+    
     # Tangents Field
 
     # Dimension 1
