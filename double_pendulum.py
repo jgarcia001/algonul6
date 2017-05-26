@@ -6,8 +6,8 @@ import methodes as m
 #----------------------------------------------------------------------------
 
 g = 9.81
-N = 3000
-h = 0.1
+N = 500
+h = 0.01
 
 w = 1.0
 l = 1.0
@@ -116,28 +116,19 @@ def test_flip():
     interval = 200
     space =  (x_end - x_start)/interval
 
-    image = np.empty([interval, interval, 3], dtype=np.uint8)
-    
+    image = np.empty((interval, interval))
+
     xaxis = np.arange(x_start, x_end, space)
     yaxis = np.arange(y_start, y_end, space)
     for i in range(0, interval,1):
         for j in range(0, interval,1):
-            the1, the2, first_flip = double_pendulum(xaxis[i], yaxis[j])
-            if (first_flip <= 1):
-                image[j][i] = [255, 255, 255]
-            elif (first_flip < N/60):
-                image[j][i] = [0, 0, 255]
-            elif (first_flip < N/30 ):
-                image[j][i] = [255, 255, 0]
-            elif (first_flip < N/20):
-                image[j][i] = [255, 0, 0]
+            if(3*np.cos(xaxis[i]) + np.cos(yaxis[j]) <= 2):
+                the1, the2, first_flip = double_pendulum(xaxis[i], yaxis[j])
             else:
-                image[j][i] = [0, 255, 0]
+                first_flip = 1  
+            image[j][i] = first_flip
 
-            
-    
-
-    plt.imshow(image, vmin = 0, vmax = 1)
+    plt.imshow(image, cmap= plt.get_cmap('YlGn'))
     plt.show()
 
 test_flip()
