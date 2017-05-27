@@ -7,7 +7,7 @@ import methodes as m
 
 g = 9.81
 N = 500
-h = 0.01
+h = 0.05
 
 w = 1.0
 l = 1.0
@@ -58,7 +58,7 @@ def double_pendulum(t1, t2):
     u_init = np.array([t1, 0, t2, 0])
     tab = double_pendulum_position_function(u_init)
     first_flip = 1
-    first_flip_b = -1
+    first_flip_b = False
     
     the1 = np.empty(N)
     the2 = np.empty(N)
@@ -68,9 +68,9 @@ def double_pendulum(t1, t2):
         
         if ( tab[i][2] > np.pi or tab[i][2] < -np.pi):
             the2[i] = (tab[i][2] % 2*np.pi) - np.pi
-            if(first_flip_b == -1):
+            if(first_flip_b == False):
                 first_flip = N / i
-                first_flip_b = 0   
+                first_flip_b = True
         else :
             the2[i] = tab[i][2] 
 
@@ -125,10 +125,10 @@ def test_flip():
             if(3*np.cos(xaxis[i]) + np.cos(yaxis[j]) <= 2):
                 the1, the2, first_flip = double_pendulum(xaxis[i], yaxis[j])
             else:
-                first_flip = 1  
+                first_flip = 0
             image[j][i] = first_flip
 
-    plt.imshow(image, cmap= plt.get_cmap('YlGn'))
+    plt.imshow(image, cmap= plt.get_cmap('Paired'))
     plt.show()
 
 test_flip()
