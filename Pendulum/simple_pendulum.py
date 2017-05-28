@@ -1,29 +1,32 @@
+import sys
+sys.path.append("../")
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 import methodes as m
 
-#--------------------------------------------------------------------- 
+#---------------------------------------------------------------------
 #Constantes utilisees lors des tests
 
 N = 300
-h = 0.1 
+h = 0.1
 
 g = 9.81
 length = 0.5
 theta_init = 10.0
 
-#--------------------------------------------------------------------- 
+#---------------------------------------------------------------------
 #Fonctions implementees pour le pendule a un maillon
 
-#Retourne sous la forme d'une lambda-expression un tableau contenant:  
-# -les vitesses du solide                                            
-# -les accélérations du solide 
+#Retourne sous la forme d'une lambda-expression un tableau contenant:
+# -les vitesses du solide
+# -les accélérations du solide
 def f_function():
-    
+
     return (lambda x,t: np.array([x[1], ((g/length) * -(np.sin(x[0])))]))
 
-#Retourne les solutions de l'équation du mouvement en fonction         
+#Retourne les solutions de l'équation du mouvement en fonction
 # des conditions initiales (y_zero)
 def pendulum_position_function(y_zero):
 
@@ -46,10 +49,10 @@ def find_period(y_array, theta):
         if((y_array[i] * y_array[i - 1]) < 0):
             start_periods = find_zero_x(y_array[i - 1], y_array[i] ,i)
         i = i + 1
-        
+
     if (start_periods == -1):
         return -1
-    
+
     while i < n:
         if((y_array[i] * y_array[i - 1]) < 0):
             half_period = half_period + 1
@@ -67,7 +70,7 @@ def find_period(y_array, theta):
 
     return period_time
 
-#--------------------------------------------------------------------- 
+#---------------------------------------------------------------------
 #Tests realises pour tester les fonctions precedentes
 
 y_zero = np.empty(2)
