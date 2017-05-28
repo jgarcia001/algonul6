@@ -118,8 +118,8 @@ def test_modelling_position():
 
 test_modelling_position()
 
-#Affiche la carte des premiers retournements suivant les conditions in\
-itiales
+#Affiche la carte des premiers retournements suivant les conditions initiales
+
 def test_flip():
     N = 200
     h = 0.05
