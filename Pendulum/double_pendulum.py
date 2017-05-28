@@ -121,16 +121,15 @@ test_modelling_position()
 #Affiche la carte des premiers retournements suivant les conditions initiales
 
 def test_flip():
-    N = 200
-    h = 0.05
 
+    print("wait few minutes for the first flip value image.... (30x30)")
     x_start = -3
     x_end = 3
 
     y_start = -3
     y_end = 3
 
-    interval = 200
+    interval = 30
     space =  (x_end - x_start)/interval
 
     image = np.empty((interval, interval))
